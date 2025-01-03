@@ -238,7 +238,12 @@ function isPalindrome(str) {
  *  'qwerty', 'p'     => -1
  */
 function getIndexOf(str, letter) {
-  throw new Error('Not implemented');
+  for (let i = 0; i < str.length; i += 1) {
+    if (str[i] === letter) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 /**
@@ -256,8 +261,15 @@ function getIndexOf(str, letter) {
  *  12345, 0    => false
  *  12345, 6    => false
  */
-function isContainNumber(/* num, digit */) {
-  throw new Error('Not implemented');
+function isContainNumber(num, digit) {
+  let number = num;
+  while (number > 0) {
+    if (number % 10 === digit) {
+      return true;
+    }
+    number = Math.floor(number / 10);
+  }
+  return false;
 }
 
 /**
@@ -273,8 +285,22 @@ function isContainNumber(/* num, digit */) {
  *  [2, 3, 9, 5] => 2       => 2 + 3 === 5 then balance element is 9 and its index = 2
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
-function getBalanceIndex(/* arr */) {
-  throw new Error('Not implemented');
+function getBalanceIndex(arr) {
+  let totalSum = 0;
+  let leftSum = 0;
+
+  for (let i = 0; i < arr.length; i += 1) {
+    totalSum += arr[i];
+  }
+
+  for (let i = 0; i < arr.length; i += 1) {
+    const rightSum = totalSum - leftSum - arr[i];
+    if (leftSum === rightSum) {
+      return i;
+    }
+    leftSum += arr[i];
+  }
+  return -1;
 }
 
 /**
@@ -298,8 +324,52 @@ function getBalanceIndex(/* arr */) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const matrix = [];
+  for (let i = 0; i < size; i += 1) {
+    matrix[i] = [];
+    for (let j = 0; j < size; j += 1) {
+      matrix[i][j] = 0;
+    }
+  }
+
+  let number = 1;
+  let top = 0;
+  let bottom = size - 1;
+  let left = 0;
+  let right = size - 1;
+
+  while (top <= bottom && left <= right) {
+    for (let i = left; i <= right; i += 1) {
+      matrix[top][i] = number;
+      number += 1;
+    }
+    top += 1;
+
+    for (let i = top; i <= bottom; i += 1) {
+      matrix[i][right] = number;
+      number += 1;
+    }
+    right -= 1;
+
+    if (top <= bottom) {
+      for (let i = right; i >= left; i -= 1) {
+        matrix[bottom][i] = number;
+        number += 1;
+      }
+      bottom -= 1;
+    }
+
+    if (left <= right) {
+      for (let i = bottom; i >= top; i -= 1) {
+        matrix[i][left] = number;
+        number += 1;
+      }
+      left += 1;
+    }
+  }
+
+  return matrix;
 }
 
 /**
@@ -317,8 +387,25 @@ function getSpiralMatrix(/* size */) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+function rotateMatrix(matrix) {
+  const size = matrix.length;
+  const trueMatrix = matrix;
+  const cloneMatrix = [];
+
+  for (let i = 0; i < size; i += 1) {
+    cloneMatrix[i] = [];
+    for (let j = 0; j < size; j += 1) {
+      cloneMatrix[i][j] = matrix[size - 1 - j][i];
+    }
+  }
+
+  for (let i = 0; i < size; i += 1) {
+    for (let j = 0; j < size; j += 1) {
+      trueMatrix[i][j] = cloneMatrix[i][j];
+    }
+  }
+
+  return trueMatrix;
 }
 
 /**
@@ -335,8 +422,19 @@ function rotateMatrix(/* matrix */) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(arr) {
+  const sortedArray = arr;
+
+  for (let i = 1; i < arr.length; i += 1) {
+    const current = arr[i];
+    let j;
+    for (j = i - 1; j >= 0 && arr[j] > current; j -= 1) {
+      sortedArray[j + 1] = arr[j];
+    }
+    sortedArray[j + 1] = current;
+  }
+
+  return sortedArray;
 }
 
 /**
@@ -356,8 +454,33 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  if (!str || iterations < 1) {
+    return str;
+  }
+
+  const { length } = str;
+  let result = str;
+
+  for (let i = 1; i <= iterations; i += 1) {
+    let left = '';
+    let right = '';
+    for (let j = 0; j < length; j += 1) {
+      if (j % 2 === 0) {
+        left += result[j];
+      } else {
+        right += result[j];
+      }
+    }
+
+    result = left + right;
+
+    if (result === str) {
+      return shuffleChar(str, iterations % i);
+    }
+  }
+
+  return result;
 }
 
 /**
