@@ -500,8 +500,55 @@ function shuffleChar(str, iterations) {
  * @param {number} number The source number
  * @returns {number} The nearest larger number, or original number if none exists.
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
+function getNearestBigger(number) {
+  const digits = [];
+  let n = number;
+
+  while (n > 0) {
+    digits.push(n % 10);
+    n = Math.floor(n / 10);
+  }
+  const reversedDigits = [];
+  for (let i = digits.length - 1; i >= 0; i -= 1) {
+    reversedDigits.push(digits[i]);
+  }
+
+  const size = reversedDigits.length;
+  let i = size - 2;
+
+  while (i >= 0 && reversedDigits[i] >= reversedDigits[i + 1]) {
+    i -= 1;
+  }
+
+  if (i === -1) {
+    return number;
+  }
+
+  let j = size - 1;
+  while (reversedDigits[j] <= reversedDigits[i]) {
+    j -= 1;
+  }
+
+  const temp = reversedDigits[i];
+  reversedDigits[i] = reversedDigits[j];
+  reversedDigits[j] = temp;
+
+  for (let x = i + 1; x < size - 1; x += 1) {
+    for (let y = x + 1; y < size; y += 1) {
+      if (reversedDigits[x] > reversedDigits[y]) {
+        const swapTemp = reversedDigits[x];
+        reversedDigits[x] = reversedDigits[y];
+        reversedDigits[y] = swapTemp;
+      }
+    }
+  }
+
+  let result = 0;
+  for (let k = 0; k < reversedDigits.length; k += 1) {
+    result = result * 10 + reversedDigits[k];
+  }
+
+  return result;
 }
 
 module.exports = {
